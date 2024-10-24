@@ -1,21 +1,11 @@
 # Databricks notebook source
-# DBTITLE 1,Configuração do job
-catalog = "bronze"
-schema = "fogo_cruzado"
-table_name = dbutils.widgets.get("table_name")
-sigla = table_name.upper()
+df_fogo_cruzado_rj_bronze = spark.sql("SELECT * FROM bronze.fogo_cruzado.rj")
 
 # COMMAND ----------
 
-# DBTITLE 1,df_fogo_cruzado formato json
-df_fogo_cruzado_json = spark.read.format("json").option("multiline", "true").load("/Volumes/raw/fogo-cruzado/s3-fogo-cruzado/{sigla}/full_load_1_2024_09_28.json")
-
-# COMMAND ----------
-
-# DBTITLE 1,Convertendo json para o formato tabular
 from pyspark.sql.functions import explode, col, explode_outer
 
-df_fogo_cruzado = df_fogo_cruzado_json.withColumn('data1', explode('data')) \
+df_fogo_cruzado_rj_silver = df_fogo_cruzado_rj_bronze.withColumn('data1', explode('data')) \
     .withColumn('id', col('data1.id')) \
     .withColumn('documentNumber', col('data1.documentNumber')) \
     .withColumn('date', col('data1.date')) \
@@ -132,6 +122,21 @@ df_fogo_cruzado = df_fogo_cruzado_json.withColumn('data1', explode('data')) \
     .drop('data', 'code', 'msg', 'msgCode', 'pageMeta', 'data1', 'victims1', 'transports1', 'animalVictims1') \
     
 
+    
+
 # COMMAND ----------
 
-df_fogo_cruzado.write.format('delta').mode('overwrite').saveAsTable('bronze.fogo_cruzado.{table_name}')
+print((df_fogo_cruzado_rj_silver.count(), len(df_fogo_cruzado_rj_silver.columns)))
+
+# COMMAND ----------
+
+df_fogo_cruzado_rj_silver.display()
+
+# COMMAND ----------
+
+df_fogo_cruzado_rj_silver.write.format('delta').mode('overwrite').saveAsTable('silver.fogo_cruzado.rj')
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from silver.fogo_cruzado.rj where victims_circumstances is not null
