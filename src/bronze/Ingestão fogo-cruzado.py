@@ -8,7 +8,7 @@ sigla = table_name.upper()
 # COMMAND ----------
 
 # DBTITLE 1,df_fogo_cruzado formato json
-df_fogo_cruzado_json = spark.read.format("json").option("multiline", "true").load("/Volumes/raw/fogo-cruzado/s3-fogo-cruzado/{sigla}/full_load_1_2024_09_28.json")
+df_fogo_cruzado_json = spark.read.format("json").option("multiline", "true").load(f"/Volumes/raw/fogo-cruzado/s3-fogo-cruzado/{sigla}/full_load_1_2024_09_28.json")
 
 # COMMAND ----------
 
@@ -134,4 +134,4 @@ df_fogo_cruzado = df_fogo_cruzado_json.withColumn('data1', explode('data')) \
 
 # COMMAND ----------
 
-df_fogo_cruzado.write.format('delta').mode('overwrite').saveAsTable('bronze.fogo_cruzado.{table_name}')
+df_fogo_cruzado.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
