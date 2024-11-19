@@ -1,11 +1,17 @@
 # Databricks notebook source
-df_fogo_cruzado_rj_bronze = spark.sql("SELECT * FROM bronze.fogo_cruzado.rj")
+catalog = "silver"
+schema = "fogo_cruzado"
+sigla = dbutils.widgets.get("table_name")
+
+# COMMAND ----------
+
+df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.fogo_cruzado.{sigla}")
 
 # COMMAND ----------
 
 from pyspark.sql.functions import explode, col, explode_outer
 
-df_fogo_cruzado_rj_silver = df_fogo_cruzado_rj_bronze.withColumn('data1', explode('data')) \
+df_fogo_cruzado_silver = df_fogo_cruzado_bronze.withColumn('data1', explode('data')) \
     .withColumn('id', col('data1.id')) \
     .withColumn('documentNumber', col('data1.documentNumber')) \
     .withColumn('date', col('data1.date')) \
@@ -126,17 +132,4 @@ df_fogo_cruzado_rj_silver = df_fogo_cruzado_rj_bronze.withColumn('data1', explod
 
 # COMMAND ----------
 
-print((df_fogo_cruzado_rj_silver.count(), len(df_fogo_cruzado_rj_silver.columns)))
-
-# COMMAND ----------
-
-df_fogo_cruzado_rj_silver.display()
-
-# COMMAND ----------
-
-df_fogo_cruzado_rj_silver.write.format('delta').mode('overwrite').saveAsTable('silver.fogo_cruzado.rj')
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select * from silver.fogo_cruzado.rj where victims_circumstances is not null
+df_fogo_cruzado_silver.write.format('delta').mode('overwrite').saveAsTable('silver.fogo_cruzado.rj')

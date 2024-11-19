@@ -135,3 +135,8 @@ df_fogo_cruzado = df_fogo_cruzado_json.withColumn('data1', explode('data')) \
 # COMMAND ----------
 
 df_fogo_cruzado.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from bronze.fogo_cruzado.pe
