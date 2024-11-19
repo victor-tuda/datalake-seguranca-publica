@@ -1,7 +1,7 @@
 # Databricks notebook source
 # DBTITLE 1,Configuração do job
-catalog = "bronze"
-schema = "fogo_cruzado"
+catalog = dbutils.widgets.get("catalog")
+schema = dbutils.widgets.get("schema")
 table_name = dbutils.widgets.get("table_name")
 sigla = table_name.upper()
 

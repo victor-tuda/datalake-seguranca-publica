@@ -1,7 +1,7 @@
 # Databricks notebook source
-catalog = "silver"
-schema = "fogo_cruzado"
-sigla = dbutils.widgets.get("table_name")
+catalog = dbutils.widgets.get("catalog")
+schema = dbutils.widgets.get("schema")
+sigla = dbutils.widgets.get("sigla")
 
 # COMMAND ----------
 
