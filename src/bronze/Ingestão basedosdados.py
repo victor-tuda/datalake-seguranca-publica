@@ -9,7 +9,7 @@ sep = dbutils.widgets.get("sep")
 # COMMAND ----------
 
 # DBTITLE 1,df_municipios
-df = spark.read.csv(f"{path}", sep={sep}, header=True)
+df = spark.read.csv(f"{path}", sep=f"{sep}", header=True)
 
 # COMMAND ----------
 
