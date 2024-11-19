@@ -4,11 +4,12 @@ catalog = dbutils.widgets.get("catalog")
 schema = dbutils.widgets.get("schema")
 table_name = dbutils.widgets.get("table_name")
 path = dbutils.widgets.get("path")
+sep = dbutils.widgets.get("sep")
 
 # COMMAND ----------
 
 # DBTITLE 1,df_municipios
-df = spark.read.csv(f"{path}", sep=";", header=True)
+df = spark.read.csv(f"{path}", sep={sep}, header=True)
 
 # COMMAND ----------
 
