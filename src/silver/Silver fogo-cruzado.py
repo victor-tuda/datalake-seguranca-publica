@@ -5,7 +5,7 @@ sigla = dbutils.widgets.get("table_name")
 
 # COMMAND ----------
 
-df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.fogo_cruzado.{sigla}")
+df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
 
 # COMMAND ----------
 
@@ -132,4 +132,4 @@ df_fogo_cruzado_silver = df_fogo_cruzado_bronze.withColumn('data1', explode('dat
 
 # COMMAND ----------
 
-df_fogo_cruzado_silver.write.format('delta').mode('overwrite').saveAsTable('silver.fogo_cruzado.rj')
+df_fogo_cruzado_silver.write.format('delta').mode('overwrite').saveAsTable('{catalog}.{schema}.{sigla}')
