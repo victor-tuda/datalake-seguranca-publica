@@ -18,4 +18,4 @@ df_fogo_cruzado_silver = df_fogo_cruzado_bronze.drop(
 
 # COMMAND ----------
 
-df_fogo_cruzado_silver.write.format('delta').mode('overwrite').saveAsTable('{catalog}.{schema}.{sigla}')
+df_fogo_cruzado_silver.write.format('delta').mode('overwrite').saveAsTable(f'{catalog}.{schema}.{sigla}')
