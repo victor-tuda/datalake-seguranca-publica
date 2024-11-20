@@ -7,7 +7,13 @@ sep = dbutils.widgets.get("sep")
 
 # COMMAND ----------
 
-df_data_sus = spark.read.csv(f"{path}/*.csv", sep=sep, header=True)
+df_data_sus = (spark.read
+    .option("sep", sep)
+    .option("header", True)
+    .option("inferSchema", True) 
+    .csv(f"{path}/*.csv"))
+
+df_data_sus = df_data_sus.dropDuplicates().fillna("")
 
 # COMMAND ----------
 
