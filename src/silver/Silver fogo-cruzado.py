@@ -11,35 +11,16 @@ df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
 
 # COMMAND ----------
 
-# DBTITLE 1,Removendo colunas relacionadas a animais e transportes
-df_fogo_cruzado_silver = df_fogo_cruzado_bronze.drop(
-    'animalVictims_id',
-    'animalVictims_name',
-    'animalVictims_occurrenceId',
-    'animalVictims_situation',
-    'animalVictims_type',
-    'transports_id',
-    'transports_interruptedTransport',
-    'transports_dateInterruption',
-    'transports_occurrenceId',
-    'transports_releaseDate',
-    'transports_transportDescription',
-    'transport_id',
-    'transport_name'
-    )
-
-# COMMAND ----------
-
 # DBTITLE 1,Tradução das colunas para português e padronização para snake_case
 from pyspark.sql.types import IntegerType
 
-df_fogo_cruzado_silver = (df_fogo_cruzado_silver
+df_fogo_cruzado_silver = (df_fogo_cruzado_bronze
     .withColumnRenamed('documentNumber', 'numero_documento')
     .withColumnRenamed('date', 'data')
     .withColumnRenamed('agentPresence', 'presenca_agente')
     .withColumnRenamed('address', 'endereco')
-    .withColumnRenamed('latitude', df_fogo_cruzado_silver['latitude'].cast(IntegerType()))
-    .withColumnRenamed('longitude', df_fogo_cruzado_silver['longitude'].cast(IntegerType()))
+    .withColumn('latitude', df_fogo_cruzado_bronze['latitude'].cast(IntegerType()))
+    .withColumn('longitude', df_fogo_cruzado_bronze['longitude'].cast(IntegerType()))
     .withColumnRenamed('relatedRecord', 'registro_relacionado')
     .withColumnRenamed('locality_id', 'id_local')
     .withColumnRenamed('locality_name', 'nome_local')
@@ -103,6 +84,25 @@ df_fogo_cruzado_silver = (df_fogo_cruzado_silver
     .withColumnRenamed('subNeighborhood_name', 'nome_sub_bairro')
 )
 
+
+# COMMAND ----------
+
+# DBTITLE 1,Removendo colunas relacionadas a animais e transportes
+df_fogo_cruzado_silver = df_fogo_cruzado_bronze.drop(
+    'animalVictims_id',
+    'animalVictims_name',
+    'animalVictims_occurrenceId',
+    'animalVictims_situation',
+    'animalVictims_type',
+    'transports_id',
+    'transports_interruptedTransport',
+    'transports_dateInterruption',
+    'transports_occurrenceId',
+    'transports_releaseDate',
+    'transports_transportDescription',
+    'transport_id',
+    'transport_name'
+    )
 
 # COMMAND ----------
 
