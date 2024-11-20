@@ -36,6 +36,8 @@ df_fogo_cruzado_silver = (df_fogo_cruzado_silver
     .withColumnRenamed('date', 'data')
     .withColumnRenamed('agentPresence', 'presenca_agente')
     .withColumnRenamed('address', 'endereco')
+    .withColumnRenamed('latitude', 'latitude').cast("int")
+    .withColumnRenamed('longitude', 'longitude').cast("int")
     .withColumnRenamed('relatedRecord', 'registro_relacionado')
     .withColumnRenamed('locality_id', 'id_local')
     .withColumnRenamed('locality_name', 'nome_local')
