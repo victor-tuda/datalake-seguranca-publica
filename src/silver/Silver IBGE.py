@@ -7,7 +7,7 @@ table_name = dbutils.widgets.get("table_name")
 # COMMAND ----------
 
 # DBTITLE 1,Gerando dataframe a partir da tabela bronze
-df_municipios_silver = spark.sql(f"SELECT codigo_municipio_completo, nome_municipio FROM bronze.{schema}.codigo_municipios")
+df_municipios_silver = spark.sql(f"SELECT codigo_municipio_completo, nome_municipio FROM bronze.{schema}.{table_name}")
 
 # COMMAND ----------
 
