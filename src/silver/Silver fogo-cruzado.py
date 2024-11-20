@@ -31,13 +31,15 @@ df_fogo_cruzado_silver = df_fogo_cruzado_bronze.drop(
 # COMMAND ----------
 
 # DBTITLE 1,Tradução das colunas para português e padronização para snake_case
+from pyspark.sql.types import IntegerType
+
 df_fogo_cruzado_silver = (df_fogo_cruzado_silver
     .withColumnRenamed('documentNumber', 'numero_documento')
     .withColumnRenamed('date', 'data')
     .withColumnRenamed('agentPresence', 'presenca_agente')
     .withColumnRenamed('address', 'endereco')
-    .withColumnRenamed('latitude', 'latitude').cast("int")
-    .withColumnRenamed('longitude', 'longitude').cast("int")
+    .withColumnRenamed('latitude', df_fogo_cruzado_silver['latitude'].cast(IntegerType())
+    .withColumnRenamed('longitude', df_fogo_cruzado_silver['longitude'].cast(IntegerType())
     .withColumnRenamed('relatedRecord', 'registro_relacionado')
     .withColumnRenamed('locality_id', 'id_local')
     .withColumnRenamed('locality_name', 'nome_local')
