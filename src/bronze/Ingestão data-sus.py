@@ -11,4 +11,4 @@ df_data_sus = spark.read.csv(f"{path}/*.csv", sep=sep, header=True)
 
 # COMMAND ----------
 
-df.write.format('delta').mode('overwrite').saveAsTable(f'{catalog}.{schema}.{table_name}')
+df_data_sus.write.format('delta').mode('overwrite').saveAsTable(f'{catalog}.{schema}.{table_name}')
