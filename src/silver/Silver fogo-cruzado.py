@@ -12,15 +12,15 @@ df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
 # COMMAND ----------
 
 # DBTITLE 1,Tradução das colunas para português e padronização para snake_case
-from pyspark.sql.types import IntegerType
+from pyspark.sql.types import IntegerType, DoubleType
 
 df_fogo_cruzado_silver = (df_fogo_cruzado_bronze
     .withColumnRenamed('documentNumber', 'numero_documento')
     .withColumnRenamed('date', 'data')
     .withColumnRenamed('agentPresence', 'presenca_agente')
     .withColumnRenamed('address', 'endereco')
-    .withColumn('latitude', df_fogo_cruzado_bronze['latitude'].cast(IntegerType()))
-    .withColumn('longitude', df_fogo_cruzado_bronze['longitude'].cast(IntegerType()))
+    .withColumn('latitude', df_fogo_cruzado_bronze['latitude'].cast(DoubleType()).cast(IntegerType()))
+    .withColumn('longitude', df_fogo_cruzado_bronze['longitude'].cast(DoubleType()).cast(IntegerType()))
     .withColumnRenamed('relatedRecord', 'registro_relacionado')
     .withColumnRenamed('locality_id', 'id_local')
     .withColumnRenamed('locality_name', 'nome_local')
@@ -108,3 +108,8 @@ df_fogo_cruzado_silver = df_fogo_cruzado_bronze.drop(
 
 # DBTITLE 1,Salvando o dataframe em uma tabela silver
 df_fogo_cruzado_silver.write.format('delta').mode('overwrite').saveAsTable(f'{catalog}.{schema}.{sigla}')
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from silver.fogo_cruzado.rj
