@@ -84,7 +84,7 @@ df_fogo_cruzado_silver = (df_fogo_cruzado_bronze
 # COMMAND ----------
 
 # DBTITLE 1,Removendo colunas relacionadas a animais e transportes
-df_fogo_cruzado_silver = df_fogo_cruzado_bronze.drop(
+df_fogo_cruzado_silver = df_fogo_cruzado_silver.drop(
     'animalVictims_id',
     'animalVictims_name',
     'animalVictims_occurrenceId',
