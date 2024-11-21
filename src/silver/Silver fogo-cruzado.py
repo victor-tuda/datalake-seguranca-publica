@@ -108,6 +108,7 @@ from pyspark.sql.functions import col
 df_fogo_cruzado_silver = (df_fogo_cruzado_silver
     .withColumn("latitude", col("latitude").cast("double"))
     .withColumn("longitude", col("longitude").cast("double"))
+    .withColumn("data", col("data").cast("date"))
 )
 
 # COMMAND ----------
