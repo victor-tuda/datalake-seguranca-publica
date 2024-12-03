@@ -103,13 +103,68 @@ df_fogo_cruzado_silver = df_fogo_cruzado_silver.drop(
 # COMMAND ----------
 
 # DBTITLE 1,Convertendo o tipo das colunas
-from pyspark.sql.functions import col
+import pyspark.sql.functions as F
 
 df_fogo_cruzado_silver = (df_fogo_cruzado_silver
-    .withColumn("latitude", col("latitude").cast("double"))
-    .withColumn("longitude", col("longitude").cast("double"))
-    .withColumn("data", col("data").cast("date"))
+    .withColumn("latitude", F.col("latitude").cast("double"))
+    .withColumn("longitude", F.col("longitude").cast("double"))
+    .withColumn("data", F.col("data").cast("date"))
 )
+
+# COMMAND ----------
+
+# DBTITLE 1,Corrigindo alguns erros gramaticais
+df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("unidade_policial_contexto", 
+    F.when(df_fogo_cruzado_silver.unidade_policial_contexto == 'N o identificado', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == '', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i Presente', 'Niterói Presente')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i presente', 'Niterói Presente')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'M ier Presente', 'Méier Presente')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Andara )", "UPP (Andaraí)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Arar /Mandela)", "UPP (Arará/Mandela)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Arar  /Mandela)", "UPP (Arará/Mandela)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Babil nia/Chap u Mangueira)", "UPP (Babilônia/Chapéu Mangueira)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Camarista M ier)", "UPP (Camarista Méier)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Complexo do Alem o)", "UPP (Complexo do Alemão)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (F /Sereno)", "UPP (Fé/Sereno)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Pav o Pav ozinho/Cantagalo)", "UPP (Pavão Pavãozinho/Cantagalo)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Provid ncia)", "UPP (Providência)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (S o Carlos)", "UPP (São Carlos)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (S o Jo o)", "UPP (São João)")
+    .otherwise(df_fogo_cruzado_silver.unidade_policial_contexto)
+    )
+
+# COMMAND ----------
+
+# DBTITLE 1,Removendo espaços em branco no começo e no final
+df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn('unidade_policial_contexto', F.rtrim(F.col("unidade_policial_contexto")))
+df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn('unidade_policial_contexto', F.ltrim(F.col("unidade_policial_contexto")))
+
+# COMMAND ----------
+
+# DBTITLE 1,Removendo REGEX
+replacements = [
+    ("º", ""),
+    ("ª", ""),
+    (" e ", ", ")
+]
+
+# Apply all replacements in a loop
+col = F.col("unidade_policial_contexto")
+for pattern, replacement in replacements:
+    col = F.regexp_replace(col, pattern, replacement)
+
+df_fogo_cruzado_silver.drop('unidade_policial_contexto')
+df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn('unidade_policial_contexto', col)
+
+# COMMAND ----------
+
+# DBTITLE 1,Separando as unidades policiais por vírgula
+# Split each row into a list of values based on the comma separator
+df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("list_values", F.split(df_fogo_cruzado_silver["unidade_policial_contexto"], ",\\s*"))
+
+df_fogo_cruzado_silver = df_fogo_cruzado_silver.drop('unidade_policial_contexto')
+df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumnRenamed('list_values', 'unidade_policial_contexto')
 
 # COMMAND ----------
 
