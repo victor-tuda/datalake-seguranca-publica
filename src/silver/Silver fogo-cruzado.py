@@ -113,12 +113,11 @@ df_fogo_cruzado_silver = (df_fogo_cruzado_silver
 
 # COMMAND ----------
 
-# DBTITLE 1,Corrigindo alguns erros gramaticais
+# DBTITLE 1,Corrigindo erros de encoding
 df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("unidade_policial_contexto", 
     F.when(df_fogo_cruzado_silver.unidade_policial_contexto == 'N o identificado', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == '', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i Presente', 'Niterói Presente')
-    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i presente', 'Niterói Presente')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'M ier Presente', 'Méier Presente')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Andara )", "UPP (Andaraí)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Arar /Mandela)", "UPP (Arará/Mandela)")
@@ -149,7 +148,6 @@ replacements = [
     (" e ", ", ")
 ]
 
-# Apply all replacements in a loop
 col = F.col("unidade_policial_contexto")
 for pattern, replacement in replacements:
     col = F.regexp_replace(col, pattern, replacement)
@@ -160,7 +158,6 @@ df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn('unidade_policial_con
 # COMMAND ----------
 
 # DBTITLE 1,Separando as unidades policiais por vírgula
-# Split each row into a list of values based on the comma separator
 df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("list_values", F.split(df_fogo_cruzado_silver["unidade_policial_contexto"], ",\\s*"))
 
 df_fogo_cruzado_silver = df_fogo_cruzado_silver.drop('unidade_policial_contexto')
