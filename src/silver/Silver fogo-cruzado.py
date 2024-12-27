@@ -139,7 +139,6 @@ df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("unidade_policial_con
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Civil - DRACO", "DRACO")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Civil", "PC")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "CORE (PC)", "CORE")
-    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "CORE (PC)", "CORE")
     .otherwise(df_fogo_cruzado_silver.unidade_policial_contexto)
     )
 
@@ -155,6 +154,7 @@ df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn('unidade_policial_con
 replacements = [
     ("º", ""),
     ("ª", ""),
+    ("°", ""),
     (" e ", ", ")
 ]
 
