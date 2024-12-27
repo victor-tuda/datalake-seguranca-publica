@@ -192,8 +192,7 @@ replacements = [
     ("º", ""),
     ("ª", ""),
     ("°", ""),
-    (" e ", ", "),
-    (" | ", ",")
+    (" e ", ", ")
 ]
 
 col = F.col("unidade_policial_contexto")
