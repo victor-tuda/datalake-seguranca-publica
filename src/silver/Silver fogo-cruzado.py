@@ -117,7 +117,7 @@ df_fogo_cruzado_silver = (df_fogo_cruzado_silver
 df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("unidade_policial_contexto", 
     F.when(df_fogo_cruzado_silver.unidade_policial_contexto == 'N o identificado', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == '', 'Não identificado')
-    .when(df_fogo_cruzado_silver.unidade_policial_contexto == NI, 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'NI', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Não Identificado', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Não Identificada', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Não informado', 'Não identificado')
@@ -215,3 +215,8 @@ df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumnRenamed('list_values',
 
 # DBTITLE 1,Salvando o dataframe em uma tabela silver
 df_fogo_cruzado_silver.write.format('delta').mode('overwrite').saveAsTable(f'{catalog}.{schema}.{sigla}')
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC drop table silver.fogo_cruzado.rj_pe
