@@ -117,17 +117,29 @@ df_fogo_cruzado_silver = (df_fogo_cruzado_silver
 df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("unidade_policial_contexto", 
     F.when(df_fogo_cruzado_silver.unidade_policial_contexto == 'N o identificado', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == '', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == NI, 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Não Identificado', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Não Identificada', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Não informado', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'não identificada', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'não identificado', 'Não identificado')
-    .when(df_fogo_cruzado_silver.unidade_policial_contexto == None, 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'null', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'policia', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'não se aplica', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'não informado', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'N�o identificado', 'Não identificado')
+
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i Presente', 'Niterói Presente')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i presente', 'Niterói Presente')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter�i presente', 'Niterói Presente')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'M ier Presente', 'Méier Presente')
+
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Andara )", "UPP (Andaraí)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Arar /Mandela)", "UPP (Arará/Mandela)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Arar  /Mandela)", "UPP (Arará/Mandela)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Arar�/Mandela)", "UPP (Arará/Mandela)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Babil nia/Chap u Mangueira)", "UPP (Babilônia/Chapéu Mangueira)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Babil�nia/Chap�u Mangueira)", "UPP (Babilônia/Chapéu Mangueira)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Camarista M ier)", "UPP (Camarista Méier)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Complexo do Alem o)", "UPP (Complexo do Alemão)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Complexo do Alem�o)", "UPP (Complexo do Alemão)")
@@ -136,9 +148,34 @@ df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("unidade_policial_con
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Provid ncia)", "UPP (Providência)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (S o Carlos)", "UPP (São Carlos)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (S o Jo o)", "UPP (São João)")
-    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Civil - DRACO", "DRACO")
+
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Civil", "PC")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Policia Civil", "PC")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "policia civil", "PC")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "polícia civil", "PC")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Militar", "PM")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Policia Militar", "PM")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "policia militar", "PM")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "polícia militar", "PM")
+
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Civil - DRACO", "DRACO")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Draco", "DRACO")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "PC (DRACO)", "DRACO")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Ssint", "SSINTE")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "PM (BPCHQ )", "BPChoque")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "CHOQUE", "BPChoque")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Choque", "BPChoque")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "PM (BOPE)", "BOPE")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "CORE (PC)", "CORE")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Coordenadoria de Recursos Especiais (Core)", "CORE")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Delegacia de Repressão a Furtos de Cargas (DRFC)", "DRFC")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Rodoviária Federal (PRF)", "PRF")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Rodoviária Federal", "PRF")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "PM (BPVR)", "BPVR")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Batalhão de Policiamento em Vias Expressas (BPVE)", "BPVE")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Batalhão de Rondas Especiais RECOM", "RECOM")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Batalhão de Rondas Especiais e Controle de Multidão (Recom)", "RECOM")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Civil de Pernambuco (CORE - Comando de Operações e Recursos Especiais da Polícia Civil e Polícia Civil do Rio Grande do Norte (DEICOR/RN - Divisão Especializada de Investigação e Combate ao Crime Organizado)", "CORE, DEICOR")
     .otherwise(df_fogo_cruzado_silver.unidade_policial_contexto)
     )
 
@@ -155,7 +192,8 @@ replacements = [
     ("º", ""),
     ("ª", ""),
     ("°", ""),
-    (" e ", ", ")
+    (" e ", ", "),
+    (" | ", ",")
 ]
 
 col = F.col("unidade_policial_contexto")
