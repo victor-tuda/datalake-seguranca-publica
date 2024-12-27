@@ -113,23 +113,33 @@ df_fogo_cruzado_silver = (df_fogo_cruzado_silver
 
 # COMMAND ----------
 
-# DBTITLE 1,Corrigindo erros de encoding
+# DBTITLE 1,Corrigindo erros de encoding e input
 df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("unidade_policial_contexto", 
     F.when(df_fogo_cruzado_silver.unidade_policial_contexto == 'N o identificado', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == '', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'não identificado', 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto.isnull(), 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'N�o identificado', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i Presente', 'Niterói Presente')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i presente', 'Niterói Presente')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'M ier Presente', 'Méier Presente')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Andara )", "UPP (Andaraí)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Arar /Mandela)", "UPP (Arará/Mandela)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Arar  /Mandela)", "UPP (Arará/Mandela)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Arar�/Mandela)", "UPP (Arará/Mandela)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Babil nia/Chap u Mangueira)", "UPP (Babilônia/Chapéu Mangueira)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Camarista M ier)", "UPP (Camarista Méier)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Complexo do Alem o)", "UPP (Complexo do Alemão)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Complexo do Alem�o)", "UPP (Complexo do Alemão)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (F /Sereno)", "UPP (Fé/Sereno)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Pav o Pav ozinho/Cantagalo)", "UPP (Pavão Pavãozinho/Cantagalo)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (Provid ncia)", "UPP (Providência)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (S o Carlos)", "UPP (São Carlos)")
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == "UPP (S o Jo o)", "UPP (São João)")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Civil - DRACO", "DRACO")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "Polícia Civil", "PC")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "CORE (PC)", "CORE")
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == "CORE (PC)", "CORE")
     .otherwise(df_fogo_cruzado_silver.unidade_policial_contexto)
     )
 
