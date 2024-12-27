@@ -118,7 +118,7 @@ df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumn("unidade_policial_con
     F.when(df_fogo_cruzado_silver.unidade_policial_contexto == 'N o identificado', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == '', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'não identificado', 'Não identificado')
-    .when(df_fogo_cruzado_silver.unidade_policial_contexto.isnull(), 'Não identificado')
+    .when(df_fogo_cruzado_silver.unidade_policial_contexto == None, 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'N�o identificado', 'Não identificado')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i Presente', 'Niterói Presente')
     .when(df_fogo_cruzado_silver.unidade_policial_contexto == 'Niter i presente', 'Niterói Presente')
