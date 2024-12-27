@@ -215,8 +215,3 @@ df_fogo_cruzado_silver = df_fogo_cruzado_silver.withColumnRenamed('list_values',
 
 # DBTITLE 1,Salvando o dataframe em uma tabela silver
 df_fogo_cruzado_silver.write.format('delta').mode('overwrite').saveAsTable(f'{catalog}.{schema}.{sigla}')
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC drop table silver.fogo_cruzado.rj_pe
