@@ -7,8 +7,7 @@ sigla = dbutils.widgets.get("sigla")
 # COMMAND ----------
 
 # DBTITLE 1,Gerando um dataframe a partir da tabela bronze
-#df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
-df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.fogo_cruzado.pe")
+df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
 
 # COMMAND ----------
 
