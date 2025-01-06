@@ -7,7 +7,8 @@ sigla = dbutils.widgets.get("sigla")
 # COMMAND ----------
 
 # DBTITLE 1,Gerando um dataframe a partir da tabela bronze
-df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
+#df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
+df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.fogo_cruzado.rj")
 
 # COMMAND ----------
 
@@ -121,71 +122,114 @@ df_regex3 = df_regex2.withColumn("unidade_policial_contexto", F.regexp_replace("
 
 # COMMAND ----------
 
-# DBTITLE 1,Corrigindo erros de encoding e input
-df_clean = df_regex3.withColumn("unidade_policial_contexto", 
-    F.when(df_regex3.unidade_policial_contexto == 'N o identificado', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == '', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'NI', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'Não Identificado', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'Não Identificada', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'Não informado', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'não identificada', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'não identificado', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'null', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'policia', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'não se aplica', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'não informado', 'Não identificado')
-    .when(df_regex3.unidade_policial_contexto == 'N�o identificado', 'Não identificado')
+# DBTITLE 1,Dicionário de erros
+erros_dict = {
+    'N o identificado': 'Não identificado',
+    '': 'Não identificado',
+    'NI': 'Não identificado',
+    'Não Identificado': 'Não identificado',
+    'Não Identificada': 'Não identificado',
+    'Não informado': 'Não identificado',
+    'não identificada': 'Não identificado',
+    'não identificado': 'Não identificado',
+    'não identificado ': 'Não identificado',
+    "Não Informada ": 'Não identificado',
+    'null': 'Não identificado',
+    'policia': 'Não identificado',
+    'não se aplica': 'Não identificado',
+    'não informado': 'Não identificado',
+    'N�o identificado': 'Não identificado',
+    'NÃO IDENTIFICADO ': 'Não identificado',
+    'Sem identificação': 'Não identificado',
 
-    .when(df_regex3.unidade_policial_contexto == 'Niter i Presente', 'Niterói Presente')
-    .when(df_regex3.unidade_policial_contexto == 'Niter i presente', 'Niterói Presente')
-    .when(df_regex3.unidade_policial_contexto == 'Niter�i presente', 'Niterói Presente')
-    .when(df_regex3.unidade_policial_contexto == 'M ier Presente', 'Méier Presente')
+    'Niter i Presente': 'Niterói Presente',
+    'Niter i presente': 'Niterói Presente',
+    'Niter�i presente': 'Niterói Presente',
+    'M ier Presente': 'Méier Presente',
 
-    .when(df_regex3.unidade_policial_contexto == "UPP (Andara )", "UPP (Andaraí)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Arar /Mandela)", "UPP (Arará/Mandela)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Arar  /Mandela)", "UPP (Arará/Mandela)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Arar�/Mandela)", "UPP (Arará/Mandela)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Babil nia/Chap u Mangueira)", "UPP (Babilônia/Chapéu Mangueira)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Babil�nia/Chap�u Mangueira)", "UPP (Babilônia/Chapéu Mangueira)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Camarista M ier)", "UPP (Camarista Méier)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Complexo do Alem o)", "UPP (Complexo do Alemão)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Complexo do Alem�o)", "UPP (Complexo do Alemão)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (F /Sereno)", "UPP (Fé/Sereno)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Pav o Pav ozinho/Cantagalo)", "UPP (Pavão Pavãozinho/Cantagalo)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (Provid ncia)", "UPP (Providência)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (S o Carlos)", "UPP (São Carlos)")
-    .when(df_regex3.unidade_policial_contexto == "UPP (S o Jo o)", "UPP (São João)")
+    "UPP (Andara )": "UPP (Andaraí)",
+    "UPP (Andara�)": "UPP (Andaraí)",
+    "UPP (Arar /Mandela)": "UPP (Arará/Mandela)",
+    "UPP (Arar  /Mandela)": "UPP (Arará/Mandela)",
+    "UPP (Arar�/Mandela)": "UPP (Arará/Mandela)",
+    "UPP (Babil nia/Chap u Mangueira)": "UPP (Babilônia/Chapéu Mangueira)",
+    "UPP (Babil�nia/Chap�u Mangueira)": "UPP (Babilônia/Chapéu Mangueira)",
+    "UPP (Camarista M ier)": "UPP (Camarista Méier)",
+    "UPP (Complexo do Alem o)": "UPP (Complexo do Alemão)",
+    "UPP (Complexo do Alem�o)": "UPP (Complexo do Alemão)",
+    "UPP (F /Sereno)": "UPP (Fé/Sereno)",
+    "UPP (Pav o Pav ozinho/Cantagalo)": "UPP (Pavão Pavãozinho/Cantagalo)",
+    "UPP (Provid ncia)": "UPP (Providência)",
+    "UPP (S o Carlos)": "UPP (São Carlos)",
+    "UPP (S o Jo o)": "UPP (São João)",
+    "UPP (S�o Jo�o)": "UPP (São João)",
+    "3 BPM, UPP (S�o Jo�o)": "3 BPM, UPP (São João)",
+    "UPP (Jacar�)": "UPP (Jacaraí)",
+    "UPP Manguinhos": "UPP (Manguinhos)",
+    "UPP MANGUINHOS": "UPP (Manguinhos)",
+    "UPP Macacos": "UPP (Macacos)",
+    "UPP Mangueira": "UPP (Mangueira)",
+    "UPP Fazendinha": "UPP (Fazendinha)",
+    "UPP Alemão": "UPP (Alemão)",
 
-    .when(df_regex3.unidade_policial_contexto == "Polícia Civil", "PC")
-    .when(df_regex3.unidade_policial_contexto == "Policia Civil", "PC")
-    .when(df_regex3.unidade_policial_contexto == "policia civil", "PC")
-    .when(df_regex3.unidade_policial_contexto == "polícia civil", "PC")
-    .when(df_regex3.unidade_policial_contexto == "Polícia Militar", "PM")
-    .when(df_regex3.unidade_policial_contexto == "Policia Militar", "PM")
-    .when(df_regex3.unidade_policial_contexto == "policia militar", "PM")
-    .when(df_regex3.unidade_policial_contexto == "polícia militar", "PM")
+    "Polícia Civil": "PC",
+    "Policia Civil": "PC",
+    "policia civil": "PC",
+    "polícia civil": "PC",
+    "Polícia Civil ": "PC",
+    "Polícia Militar": "PM",
+    "Policia Militar": "PM",
+    "policia militar": "PM",
+    "polícia militar": "PM",
+    "Polícia Militar (8 Delegacia de Polícia Judiciária Militar)": "PM (8 Delegacia de Polícia Judiciária Militar)",
+    "PM e PC": "PM, PC",
+    "a PM": "PM",
+    "PM | Choque | COE": "PM, BPChoque, COE",
 
-    .when(df_regex3.unidade_policial_contexto == "Polícia Civil - DRACO", "DRACO")
-    .when(df_regex3.unidade_policial_contexto == "Draco", "DRACO")
-    .when(df_regex3.unidade_policial_contexto == "PC (DRACO)", "DRACO")
-    .when(df_regex3.unidade_policial_contexto == "Ssint", "SSINTE")
-    .when(df_regex3.unidade_policial_contexto == "PM (BPCHQ )", "BPChoque")
-    .when(df_regex3.unidade_policial_contexto == "CHOQUE", "BPChoque")
-    .when(df_regex3.unidade_policial_contexto == "Choque", "BPChoque")
-    .when(df_regex3.unidade_policial_contexto == "PM (BOPE)", "BOPE")
-    .when(df_regex3.unidade_policial_contexto == "CORE (PC)", "CORE")
-    .when(df_regex3.unidade_policial_contexto == "Coordenadoria de Recursos Especiais (Core)", "CORE")
-    .when(df_regex3.unidade_policial_contexto == "Delegacia de Repressão a Furtos de Cargas (DRFC)", "DRFC")
-    .when(df_regex3.unidade_policial_contexto == "Polícia Rodoviária Federal (PRF)", "PRF")
-    .when(df_regex3.unidade_policial_contexto == "Polícia Rodoviária Federal", "PRF")
-    .when(df_regex3.unidade_policial_contexto == "PM (BPVR)", "BPVR")
-    .when(df_regex3.unidade_policial_contexto == "Batalhão de Policiamento em Vias Expressas (BPVE)", "BPVE")
-    .when(df_regex3.unidade_policial_contexto == "Batalhão de Rondas Especiais RECOM", "RECOM")
-    .when(df_regex3.unidade_policial_contexto == "Batalhão de Rondas Especiais e Controle de Multidão (Recom)", "RECOM")
-    .when(df_regex3.unidade_policial_contexto == "Polícia Civil de Pernambuco (CORE - Comando de Operações e Recursos Especiais da Polícia Civil e Polícia Civil do Rio Grande do Norte (DEICOR/RN - Divisão Especializada de Investigação e Combate ao Crime Organizado)", "CORE, DEICOR")
-    .otherwise(df_regex3.unidade_policial_contexto)
-    )
+    "Polícia Civil - DRACO": "DRACO",
+    "Draco": "DRACO",
+    "PC (DRACO)": "DRACO",
+    "Ssint": "SSINTE",
+    "Ssinte": "SSINTE",
+    "PM (BPCHQ )": "BPChoque",
+    "BPChq": "BPChoque",
+    "CHOQUE": "BPChoque",
+    "Choque": "BPChoque",
+    "PM (BOPE)": "BOPE",
+    "BOPE E CORE": "BOPE, CORE",
+    "CORE (PC)": "CORE",
+    "Coordenadoria de Recursos Especiais (Core)": "CORE",
+    "Delegacia de Repressão a Furtos de Cargas (DRFC)": "DRFC",
+    "Polícia Rodoviária Federal (PRF)": "PRF",
+    "Polícia Rodoviária Federal": "PRF",
+    "PM (BPVR)": "BPVR",
+    "Batalhão de Policiamento em Vias Expressas (BPVE)": "BPVE",
+    "Batalhão de Policiamento em Vias Expressas (BPVE) ": "BPVE",
+    "Batalhão de Rondas Especiais RECOM": "RECOM",
+    "Batalhão de Rondas Especiais e Controle de Multidão (Recom)": "RECOM",
+    "SEGURANÇA PRESENTE": "Segurança Presente",
+    "Segurança Presente ": "Segurança Presente",
+    "Coordenadoria de Polícia Pacificadora (CPP)": "CPP",
+    "Polícia Civil de Pernambuco (CORE - Comando de Operações e Recursos Especiais da Polícia Civil e Polícia Civil do Rio Grande do Norte (DEICOR/RN - Divisão Especializada de Investigação e Combate ao Crime Organizado)": "CORE, DEICOR",
+    "15BPM, com apoio do 3CPA": "15BPM, 3CPA",
+    "16BPM, com apoio de outras unidades do 1CPA": "16BPM, 1CPA",
+    "Delegacias de Roubos e Furtos de Automóveis e de Cargas (DRFA) e (DRFC), Coordenadoria de Operações e Recursos Especiais (Core), Delegacia de Repressão a Entorpecentes (DRE) e  Batalhão de Operações Policiais Especiais (Bope)": "DRFA, DRFC, CORE, DRE, Bope",
+    "Polícia Civil (DRE, DRACO e DRFC), Polícia Militar (GAM)": "DRE, DRACO, DRFC, GAM",
+    "25 DP (Engenho Novo), Coordenadoria de Recursos Especiais (Core), Delegacia de Repressão a Furtos de Cargas (DRFC), Subsecretaria de Segurança e a PM": "25 DP (Engenho Novo), CORE, DRFC, Subsecretaria de Segurança, PM",
+    "18BPM,  2 Comando de Policiamento de Área (2 CPA), do Batalhão de Operações de Policiais Especiais (BOPE) e Batalhão de Rondas Especiais e Controle de Multidão (RECOM)": "18BPM, 2 CPA, BOPE, RECOM"
+}
+
+
+# COMMAND ----------
+
+df_clean = df_regex3.replace(erros_dict, subset=["unidade_policial_contexto"])
+
+# COMMAND ----------
+
+df_clean.groupBy("unidade_policial_contexto") \
+    .count() \
+    .orderBy(F.desc("count")) \
+    .display()
 
 # COMMAND ----------
 
