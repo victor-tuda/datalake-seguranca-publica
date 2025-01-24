@@ -7,8 +7,7 @@ sigla = dbutils.widgets.get("sigla")
 # COMMAND ----------
 
 # DBTITLE 1,Gerando um dataframe a partir da tabela bronze
-#df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
-df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.fogo_cruzado.rj")
+df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
 
 # COMMAND ----------
 
@@ -163,6 +162,7 @@ erros_dict = {
     "UPP (S o Carlos)": "UPP (São Carlos)",
     "UPP (S o Jo o)": "UPP (São João)",
     "UPP (S�o Jo�o)": "UPP (São João)",
+    "UPP (Provid�ncia)": "UPP (Providência)",
     "3 BPM, UPP (S�o Jo�o)": "3 BPM, UPP (São João)",
     "UPP (Jacar�)": "UPP (Jacaraí)",
     "UPP Manguinhos": "UPP (Manguinhos)",
@@ -222,14 +222,13 @@ erros_dict = {
 
 # COMMAND ----------
 
+# DBTITLE 1,Aplicando dicionário de erros
 df_clean = df_regex3.replace(erros_dict, subset=["unidade_policial_contexto"])
 
 # COMMAND ----------
 
-df_clean.groupBy("unidade_policial_contexto") \
-    .count() \
-    .orderBy(F.desc("count")) \
-    .display()
+# DBTITLE 1,Removendo valores nulos
+df_clean = df_clean.na.fill("Não identificado", ["unidade_policial_contexto"])
 
 # COMMAND ----------
 
