@@ -79,7 +79,7 @@ df_raw_with_columns = df_raw_exploded \
     .withColumn('victims_genre_id', col('victims1.genre.id')) \
     .withColumn('victims_genre_name', col('victims1.genre.name')) \
     \
-    .withColumn('parties1', explode_outer('explodedContent.victims.parties')) \
+    .withColumn('parties1', explode_outer('explodedContent.victims.partie')) \
     .withColumn('victims_partie_id', col('parties1.id')) \
     .withColumn('victims_partie_name', col('parties1.name')) \
     \
