@@ -8,7 +8,7 @@ sigla = table_name.upper()
 # COMMAND ----------
 
 # DBTITLE 1,df_fogo_cruzado formato json
-df_raw = spark.read.format("json").option("multiline", "true").load(f"/Volumes/raw/fogo-cruzado/s3-fogo-cruzado/{sigla}")
+df_raw = spark.read.format("json").option("multiline", "true").load(f"/Volumes/raw/fogo-cruzado/s3-fogo-cruzado-cdc/{sigla}")
 
 # COMMAND ----------
 
