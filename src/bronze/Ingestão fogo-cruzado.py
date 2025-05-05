@@ -18,6 +18,10 @@ df_raw_exploded = df_raw.withColumn('explodedContent', explode('data')).drop('da
 
 # COMMAND ----------
 
+df_raw_exploded.display()
+
+# COMMAND ----------
+
 # DBTITLE 1,Convertendo json para o formato tabular
 from pyspark.sql.functions import col, explode_outer
 
@@ -75,8 +79,9 @@ df_raw_with_columns = df_raw_exploded \
     .withColumn('victims_genre_id', col('victims1.genre.id')) \
     .withColumn('victims_genre_name', col('victims1.genre.name')) \
     \
-    .withColumn('victims_partie_id', col('victims1.partie.id')) \
-    .withColumn('victims_partie_name', col('victims1.partie.name')) \
+    .withColumn('parties1', explode_outer('explodedContent.victims.parties')) \
+    .withColumn('victims_partie_id', col('parties1.id')) \
+    .withColumn('victims_partie_name', col('parties1.name')) \
     \
     .withColumn('victims_place_id', col('victims1.place.id')) \
     .withColumn('victims_place_name', col('victims1.place.name')) \
