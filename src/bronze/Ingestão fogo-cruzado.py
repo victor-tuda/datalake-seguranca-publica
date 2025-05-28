@@ -115,24 +115,6 @@ df_raw_with_columns = df_raw_exploded \
     .withColumn('subNeighborhood_id', col('explodedContent.subNeighborhood.id')) \
     .withColumn('subNeighborhood_name', col('explodedContent.subNeighborhood.name')) \
     \
-    .withColumn('transports1', explode_outer('explodedContent.transports')) \
-    .withColumn('transports_id', col('transports1.id')) \
-    .withColumn('transports_interruptedTransport', col('transports1.interruptedTransport')) \
-    .withColumn('transports_dateInterruption', col('transports1.dateInterruption')) \
-    .withColumn('transports_occurrenceId', col('transports1.occurrenceId')) \
-    .withColumn('transports_releaseDate', col('transports1.releaseDate')) \
-    .withColumn('transports_transportDescription', col('transports1.transportDescription')) \
-    \
-    .withColumn('transport_id', col('transports1.transport.id')) \
-    .withColumn('transport_name', col('transports1.transport.name')) \
-    \
-    .withColumn('animalVictims1', explode_outer('explodedContent.animalVictims')) \
-    .withColumn('animalVictims_id', col('animalVictims1.id')) \
-    .withColumn('animalVictims_name', col('animalVictims1.name')) \
-    .withColumn('animalVictims_occurrenceId', col('animalVictims1.occurrenceId')) \
-    .withColumn('animalVictims_situation', col('animalVictims1.situation')) \
-    .withColumn('animalVictims_type', col('animalVictims1.type')) \
-    \
     .drop('data', 'code', 'msg', 'msgCode', 'pageMeta', 'explodedContent', 'victims1', 'transports1', 'animalVictims1') \
     
 
