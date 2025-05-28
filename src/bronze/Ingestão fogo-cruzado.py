@@ -61,6 +61,7 @@ df_raw_with_columns = df_raw_exploded \
     .withColumn('victims_situation', col('victims1.situation')) \
     .withColumn('victims_type', col('victims1.type')) \
     .withColumn('victims_unit', col('victims1.unit')) \
+    .withColumn('victims_party', col('victims1.unit')) \
     \
     .withColumn('victims_ageGroup_id', col('victims1.ageGroup.id')) \
     .withColumn('victims_ageGroup_name', col('victims1.ageGroup.name')) \
