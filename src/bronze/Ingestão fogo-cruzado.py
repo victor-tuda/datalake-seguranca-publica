@@ -40,10 +40,6 @@ first_flatten_exploded = first_flatten.withColumn('dataExploded_victimsExploded'
 
 # COMMAND ----------
 
-first_flatten_exploded.display()
-
-# COMMAND ----------
-
 second_flatten = flatten_df(first_flatten_exploded)
 
 second_flatten_exploded = second_flatten \
@@ -55,16 +51,31 @@ second_flatten_exploded = second_flatten \
 # COMMAND ----------
 
 third_flatten = flatten_df(second_flatten_exploded)
+third_flatten_exploded = third_flatten \
+    .withColumn('dataExploded_contextInfo_clippingsExploded', explode_outer('dataExploded_contextInfo_clippings')) \
+    .drop('dataExploded_contextInfo_clippings')
 
 # COMMAND ----------
 
-for column in third_flatten.columns:
-    third_flatten = third_flatten.withColumnRenamed(column, column.replace('dataExploded_', ''))
+fourth_flatten = flatten_df(third_flatten_exploded)
 
-for column in third_flatten.columns:
+# COMMAND ----------
+
+result = fourth_flatten
+
+# COMMAND ----------
+
+for column in result.columns:
+    result = result.withColumnRenamed(column, column.replace('dataExploded_', ''))
+
+for column in result.columns:
     if 'Exploded' in column:
-        third_flatten = third_flatten.withColumnRenamed(column, column.replace('Exploded', ''))
+        result = result.withColumnRenamed(column, column.replace('Exploded', ''))
 
 # COMMAND ----------
 
-third_flatten.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
+result.printSchema()
+
+# COMMAND ----------
+
+result.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
