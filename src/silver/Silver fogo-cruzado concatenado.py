@@ -2,7 +2,7 @@
 # Check if the table exists
 if spark.catalog.tableExists("silver.fogo_cruzado.rj_pe"):
     df_fogo_cruzado_concatenado = spark.sql(f"""
-                                            SELECT * EXCEPT (subNeighborhood) FROM silver.fogo_cruzado.rj
+                                            SELECT * EXCEPT (sub_bairro) FROM silver.fogo_cruzado.rj
                                             UNION ALL
                                             SELECT * EXCEPT (subNeighborhood_id,subNeighborhood_name) FROM silver.fogo_cruzado.pe
                                             """)
