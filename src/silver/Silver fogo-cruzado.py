@@ -104,9 +104,9 @@ df_clean = (df_clean
 # COMMAND ----------
 
 # DBTITLE 1,Removendo caracteres especiais
-df_regex1 = df_clean.withColumn("unidade_policial_contexto", F.regexp_replace("unidade_policial_contexto", "º", ""))
-df_regex2 = df_regex1.withColumn("unidade_policial_contexto", F.regexp_replace("unidade_policial_contexto", "ª", ""))
-df_regex3 = df_regex2.withColumn("unidade_policial_contexto", F.regexp_replace("unidade_policial_contexto", "°", ""))
+df_regex1 = df_clean.withColumn("contexto_unidade_policial", F.regexp_replace("contexto_unidade_policial", "º", ""))
+df_regex2 = df_regex1.withColumn("contexto_unidade_policial", F.regexp_replace("contexto_unidade_policial", "ª", ""))
+df_regex3 = df_regex2.withColumn("contexto_unidade_policial", F.regexp_replace("contexto_unidade_policial", "°", ""))
 
 
 # COMMAND ----------
@@ -213,38 +213,38 @@ erros_dict = {
 # COMMAND ----------
 
 # DBTITLE 1,Aplicando dicionário de erros
-df_clean = df_regex3.replace(erros_dict, subset=["unidade_policial_contexto"])
+df_clean = df_regex3.replace(erros_dict, subset=["contexto_unidade_policial"])
 
 # COMMAND ----------
 
 # DBTITLE 1,Removendo valores nulos
-df_clean = df_clean.na.fill("Não identificado", ["unidade_policial_contexto"])
+df_clean = df_clean.na.fill("Não identificado", ["contexto_unidade_policial"])
 
 # COMMAND ----------
 
 # DBTITLE 1,Convertendo para lista a partir de delimitador
-df_clean = df_clean.withColumn("unidade_policial_contexto", F.regexp_replace("unidade_policial_contexto", " e ", ", "))
+df_clean = df_clean.withColumn("contexto_unidade_policial", F.regexp_replace("contexto_unidade_policial", " e ", ", "))
 
 # COMMAND ----------
 
 # DBTITLE 1,Removendo espaços em branco no começo e no final
-df_clean = df_clean.withColumn('unidade_policial_contexto', F.ltrim(F.col("unidade_policial_contexto")))
-df_clean = df_clean.withColumn('unidade_policial_contexto', F.rtrim(F.col("unidade_policial_contexto")))
+df_clean = df_clean.withColumn('contexto_unidade_policial', F.ltrim(F.col("contexto_unidade_policial")))
+df_clean = df_clean.withColumn('contexto_unidade_policial', F.rtrim(F.col("contexto_unidade_policial")))
 
 # COMMAND ----------
 
 # DBTITLE 1,Separando as unidades policiais por vírgula
-df_list = df_clean.withColumn("list_values", F.split(df_clean["unidade_policial_contexto"], ",\\s*"))
+df_list = df_clean.withColumn("list_values", F.split(df_clean["contexto_unidade_policial"], ",\\s*"))
 
-df_list = df_list.drop('unidade_policial_contexto')
-df_list = df_list.withColumnRenamed('list_values', 'unidade_policial_contexto')
+df_list = df_list.drop('contexto_unidade_policial')
+df_list = df_list.withColumnRenamed('list_values', 'contexto_unidade_policial')
 
 # COMMAND ----------
 
 # DBTITLE 1,Explode - uma nova linha para cada unidade policial
 df_exploded = (
     df_list
-    .withColumn("unidade_policial_contexto", F.explode("unidade_policial_contexto"))
+    .withColumn("contexto_unidade_policial", F.explode("contexto_unidade_policial"))
 )
 
 # COMMAND ----------
@@ -252,28 +252,28 @@ df_exploded = (
 # DBTITLE 1,Gerando colunas extras a partir da unidade policial
 from pyspark.sql import functions as F
 
-df_exploded = df_exploded.withColumn('unidade_policial_numero', 
+df_exploded = df_exploded.withColumn('contexto_unidade_policial_numero', 
     F.trim(
-        F.regexp_extract('unidade_policial_contexto', '[0-9]*', 0)
+        F.regexp_extract('contexto_unidade_policial_contexto', '[0-9]*', 0)
     )
 )
 
-df_exploded = df_exploded.withColumn('unidade_policial_info_adicional', 
+df_exploded = df_exploded.withColumn('contexto_unidade_policial_info_adicional', 
     F.trim(
         F.regexp_replace(
-            F.regexp_extract('unidade_policial_contexto', '[(]([^)]*)', 0),
+            F.regexp_extract('contexto_unidade_policial_contexto', '[(]([^)]*)', 0),
         '[(]', ''
         )
     )
 )
 
 df_exploded = df_exploded.withColumn(
-    "unidade_policial_contexto",
+    "contexto_unidade_policial_contexto",
     F.trim(
         F.regexp_replace(
             F.regexp_replace(
                 F.regexp_replace(
-                    "unidade_policial_contexto", '[0-9]*', ""  # Remove numbers
+                    "contexto_unidade_policial_contexto", '[0-9]*', ""  # Remove numbers
                 ),
                 '[(]([^)]*)', ""  # Remove content inside parentheses
             ),
