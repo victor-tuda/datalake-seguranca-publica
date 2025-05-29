@@ -11,7 +11,7 @@ if spark.catalog.tableExists("silver.fogo_cruzado.rj_pe"):
 else:
     spark.sql(f"""
         CREATE TABLE silver.fogo_cruzado.rj_pe AS
-            SELECT * EXCEPT (subNeighborhood) FROM silver.fogo_cruzado.rj
+            SELECT * EXCEPT (sub_bairro) FROM silver.fogo_cruzado.rj
             UNION ALL
             SELECT * EXCEPT (subNeighborhood_id,subNeighborhood_name) FROM silver.fogo_cruzado.pe ;
     """)
