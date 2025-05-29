@@ -254,26 +254,26 @@ from pyspark.sql import functions as F
 
 df_exploded = df_exploded.withColumn('contexto_unidade_policial_numero', 
     F.trim(
-        F.regexp_extract('contexto_unidade_policial_contexto', '[0-9]*', 0)
+        F.regexp_extract('contexto_unidade_policial', '[0-9]*', 0)
     )
 )
 
 df_exploded = df_exploded.withColumn('contexto_unidade_policial_info_adicional', 
     F.trim(
         F.regexp_replace(
-            F.regexp_extract('contexto_unidade_policial_contexto', '[(]([^)]*)', 0),
+            F.regexp_extract('contexto_unidade_policial', '[(]([^)]*)', 0),
         '[(]', ''
         )
     )
 )
 
 df_exploded = df_exploded.withColumn(
-    "contexto_unidade_policial_contexto",
+    "contexto_unidade_policial",
     F.trim(
         F.regexp_replace(
             F.regexp_replace(
                 F.regexp_replace(
-                    "contexto_unidade_policial_contexto", '[0-9]*', ""  # Remove numbers
+                    "contexto_unidade_policial", '[0-9]*', ""  # Remove numbers
                 ),
                 '[(]([^)]*)', ""  # Remove content inside parentheses
             ),
