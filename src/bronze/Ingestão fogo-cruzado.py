@@ -74,8 +74,4 @@ for column in result.columns:
 
 # COMMAND ----------
 
-result.printSchema()
-
-# COMMAND ----------
-
 result.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
