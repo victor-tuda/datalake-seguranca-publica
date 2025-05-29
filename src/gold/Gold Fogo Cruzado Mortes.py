@@ -5,13 +5,12 @@
 # MAGIC   data,
 # MAGIC   presenca_agente,
 # MAGIC   endereco,
-# MAGIC   nome_local,
-# MAGIC   nome_estado,
-# MAGIC   nome_cidade,
-# MAGIC   nome_bairro,
-# MAGIC   nome_sub_bairro,
-# MAGIC   nome_principal_razao_contexto,
+# MAGIC   localidade_nome,
+# MAGIC   estado_nome,
+# MAGIC   municipio_nome,
+# MAGIC   bairro_nome,
+# MAGIC   contexto_motivo_principal_nome,
 # MAGIC   latitude,
 # MAGIC   longitude
 # MAGIC from silver.fogo_cruzado.rj_pe
-# MAGIC where situacao_vitimas = 'Dead'
+# MAGIC where vitima_situacao = 'Dead'
