@@ -13,92 +13,82 @@ df_fogo_cruzado_bronze = spark.sql(f"SELECT * FROM bronze.{schema}.{sigla}")
 
 # DBTITLE 1,Tradução das colunas para português e padronização para snake_case
 df_clean = (df_fogo_cruzado_bronze
-    .withColumnRenamed('documentNumber', 'numero_documento')
-    .withColumnRenamed('date', 'data')
-    .withColumnRenamed('agentPresence', 'presenca_agente')
-    .withColumnRenamed('address', 'endereco')
-    .withColumnRenamed('relatedRecord', 'registro_relacionado')
-    .withColumnRenamed('locality_id', 'id_local')
-    .withColumnRenamed('locality_name', 'nome_local')
-    .withColumnRenamed('region_id', 'id_regiao')
-    .withColumnRenamed('region_region', 'regiao_regiao')
-    .withColumnRenamed('region_enabled', 'regiao_ativa')
-    .withColumnRenamed('region_state', 'regiao_estado')
-    .withColumnRenamed('state_id', 'id_estado')
-    .withColumnRenamed('state_name', 'nome_estado')
-    .withColumnRenamed('city_id', 'id_cidade')
-    .withColumnRenamed('city_name', 'nome_cidade')
-    .withColumnRenamed('victims_id', 'id_vitimas')
-    .withColumnRenamed('victims_name', 'nome_vitimas')
-    .withColumnRenamed('victims_age', 'idade_vitimas')
-    .withColumnRenamed('victims_gender', 'genero_vitimas')
-    .withColumnRenamed('victims_situation', 'situacao_vitimas')
-    .withColumnRenamed('victims_type', 'tipo_vitimas')
-    .withColumnRenamed('victims_occurrenceId', 'id_ocorrencia_vitimas')
-    .withColumnRenamed('victims_deathDate', 'data_falecimento_vitimas')
-    .withColumnRenamed('victims_personType', 'tipo_pessoa_vitimas')
-    .withColumnRenamed('victims_race', 'raca_vitimas')
-    .withColumnRenamed('victims_unit', 'unidade_vitimas')
-    .withColumnRenamed('victims_ageGroup_id', 'id_faixa_etaria_vitimas')
-    .withColumnRenamed('victims_ageGroup_name', 'nome_faixa_etaria_vitimas')
-    .withColumnRenamed('victims_agentPosition_id', 'id_posicao_agente_vitimas')
-    .withColumnRenamed('victims_agentPosition_name', 'nome_posicao_agente_vitimas')
-    .withColumnRenamed('victims_agentPosition_type', 'tipo_posicao_agente_vitimas')
-    .withColumnRenamed('victims_agentStatus_id', 'id_status_agente_vitimas')
-    .withColumnRenamed('victims_agentStatus_name', 'nome_status_agente_vitimas')
-    .withColumnRenamed('victims_agentStatus_type', 'tipo_status_agente_vitimas')
-    .withColumnRenamed('victims_coorporation_id', 'id_corporacao_vitimas')
-    .withColumnRenamed('victims_coorporation_name', 'nome_corporacao_vitimas')
-    .withColumnRenamed('victims_genre_id', 'id_genero_vitimas')
-    .withColumnRenamed('victims_genre_name', 'nome_genero_vitimas')
-    .withColumnRenamed('victims_partie_id', 'id_partido_vitimas')
-    .withColumnRenamed('victims_partie_name', 'nome_partido_vitimas')
-    .withColumnRenamed('victims_place_id', 'id_local_vitimas')
-    .withColumnRenamed('victims_place_name', 'nome_local_vitimas')
-    .withColumnRenamed('victims_politicalPosition_id', 'id_posicao_politica_vitimas')
-    .withColumnRenamed('victims_politicalPosition_name', 'nome_posicao_politica_vitimas')
-    .withColumnRenamed('victims_politicalPosition_type', 'tipo_posicao_politica_vitimas')
-    .withColumnRenamed('victims_politicalStatus_id', 'id_status_politico_vitimas')
-    .withColumnRenamed('victims_politicalStatus_name', 'nome_status_politico_vitimas')
-    .withColumnRenamed('victims_politicalStatus_type', 'tipo_status_politico_vitimas')
-    .withColumnRenamed('victims_serviceStatus_id', 'id_status_servico_vitimas')
-    .withColumnRenamed('victims_serviceStatus_name', 'nome_status_servico_vitimas')
-    .withColumnRenamed('victims_serviceStatus_type', 'tipo_status_servico_vitimas')
-    .withColumnRenamed('victims_qualifications', 'qualificacoes_vitimas')
-    .withColumnRenamed('victims_circumstances', 'circunstancias_vitimas')
-    .withColumnRenamed('contextInfo_policeUnit', 'unidade_policial_contexto')
-    .withColumnRenamed('contextInfo_massacre', 'massacre_contexto')
-    .withColumnRenamed('contextInfo_mainReason_id', 'id_principal_razao_contexto')
-    .withColumnRenamed('contextInfo_mainReason_name', 'nome_principal_razao_contexto')
-    .withColumnRenamed('contextInfo_complementaryReasons_id', 'ids_razoes_complementares_contexto')
-    .withColumnRenamed('contextInfo_complementaryReasons_name', 'nomes_razoes_complementares_contexto')
-    .withColumnRenamed('contextInfo_clippings_id', 'ids_recortes_contexto')
-    .withColumnRenamed('contextInfo_clippings_name', 'nomes_recortes_contexto')
-    .withColumnRenamed('neighborhood_id', 'id_bairro')
-    .withColumnRenamed('neighborhood_name', 'nome_bairro')
-    .withColumnRenamed('subNeighborhood_id', 'id_sub_bairro')
-    .withColumnRenamed('subNeighborhood_name', 'nome_sub_bairro')
+    .withColumnRenamed('address', 'endereco') \
+    .withColumnRenamed('agentPresence', 'presenca_agente') \
+    .withColumnRenamed('date', 'data') \
+    .withColumnRenamed('documentNumber', 'numero_documento') \
+    .withColumnRenamed('id', 'id') \
+    .withColumnRenamed('latitude', 'latitude') \
+    .withColumnRenamed('longitude', 'longitude') \
+    .withColumnRenamed('policeAction', 'acao_policial') \
+    .withColumnRenamed('relatedRecord', 'registro_relacionado') \
+    .withColumnRenamed('subNeighborhood', 'sub_bairro') \
+    .withColumnRenamed('city_id', 'municipio_id') \
+    .withColumnRenamed('city_name', 'municipio_nome') \
+    .withColumnRenamed('contextInfo_massacre', 'contexto_massacre') \
+    .withColumnRenamed('contextInfo_policeUnit', 'contexto_unidade_policial') \
+    .withColumnRenamed('locality_id', 'localidade_id') \
+    .withColumnRenamed('locality_name', 'localidade_nome') \
+    .withColumnRenamed('neighborhood_id', 'bairro_id') \
+    .withColumnRenamed('neighborhood_name', 'bairro_nome') \
+    .withColumnRenamed('region_enabled', 'regiao_ativa') \
+    .withColumnRenamed('region_id', 'regiao_id') \
+    .withColumnRenamed('region_region', 'regiao_regiao') \
+    .withColumnRenamed('region_state', 'regiao_estado') \
+    .withColumnRenamed('state_id', 'estado_id') \
+    .withColumnRenamed('state_name', 'estado_nome') \
+    .withColumnRenamed('victims_age', 'vitima_idade') \
+    .withColumnRenamed('victims_deathDate', 'vitima_data_morte') \
+    .withColumnRenamed('victims_id', 'vitima_id') \
+    .withColumnRenamed('victims_occurrenceId', 'vitima_id_ocorrencia') \
+    .withColumnRenamed('victims_partie', 'vitima_partido') \
+    .withColumnRenamed('victims_personType', 'vitima_tipo_pessoa') \
+    .withColumnRenamed('victims_race', 'vitima_raca') \
+    .withColumnRenamed('victims_situation', 'vitima_situacao') \
+    .withColumnRenamed('victims_type', 'vitima_tipo') \
+    .withColumnRenamed('victims_unit', 'vitima_unidade') \
+    .withColumnRenamed('contextInfo_mainReason_id', 'contexto_motivo_principal_id') \
+    .withColumnRenamed('contextInfo_mainReason_name', 'contexto_motivo_principal_nome') \
+    .withColumnRenamed('victims_ageGroup_id', 'vitima_faixa_etaria_id') \
+    .withColumnRenamed('victims_ageGroup_name', 'vitima_faixa_etaria_nome') \
+    .withColumnRenamed('victims_agentPosition_id', 'vitima_agente_cargo_id') \
+    .withColumnRenamed('victims_agentPosition_name', 'vitima_agente_cargo_nome') \
+    .withColumnRenamed('victims_agentPosition_type', 'vitima_agente_cargo_tipo') \
+    .withColumnRenamed('victims_agentStatus_id', 'vitima_agente_status_id') \
+    .withColumnRenamed('victims_agentStatus_name', 'vitima_agente_status_nome') \
+    .withColumnRenamed('victims_agentStatus_type', 'vitima_agente_status_tipo') \
+    .withColumnRenamed('victims_coorporation_id', 'vitima_corporacao_id') \
+    .withColumnRenamed('victims_coorporation_name', 'vitima_corporacao_nome') \
+    .withColumnRenamed('victims_genre_id', 'vitima_genero_id') \
+    .withColumnRenamed('victims_genre_name', 'vitima_genero_nome') \
+    .withColumnRenamed('victims_place_id', 'vitima_local_id') \
+    .withColumnRenamed('victims_place_name', 'vitima_local_nome') \
+    .withColumnRenamed('victims_politicalPosition_id', 'vitima_posicao_politica_id') \
+    .withColumnRenamed('victims_politicalPosition_name', 'vitima_posicao_politica_nome') \
+    .withColumnRenamed('victims_politicalPosition_type', 'vitima_posicao_politica_tipo') \
+    .withColumnRenamed('victims_politicalStatus_id', 'vitima_status_politico_id') \
+    .withColumnRenamed('victims_politicalStatus_name', 'vitima_status_politico_nome') \
+    .withColumnRenamed('victims_politicalStatus_type', 'vitima_status_politico_tipo') \
+    .withColumnRenamed('victims_serviceStatus_id', 'vitima_status_servico_id') \
+    .withColumnRenamed('victims_serviceStatus_name', 'vitima_status_servico_nome') \
+    .withColumnRenamed('victims_serviceStatus_type', 'vitima_status_servico_tipo') \
+    .withColumnRenamed('contextInfo_complementaryReasons_id', 'contexto_motivos_complementares_id') \
+    .withColumnRenamed('contextInfo_complementaryReasons_name', 'contexto_motivos_complementares_nome') \
+    .withColumnRenamed('victims_circumstances_id', 'vitima_circunstancias_id') \
+    .withColumnRenamed('victims_circumstances_name', 'vitima_circunstancias_nome') \
+    .withColumnRenamed('victims_circumstances_type', 'vitima_circunstancias_tipo') \
+    .withColumnRenamed('victims_qualifications_id', 'vitima_qualificacoes_id') \
+    .withColumnRenamed('victims_qualifications_name', 'vitima_qualificacoes_nome') \
+    .withColumnRenamed('victims_qualifications_type', 'vitima_qualificacoes_tipo') \
+    .withColumnRenamed('contextInfo_clippings_id', 'contexto_recortes_id') \
+    .withColumnRenamed('contextInfo_clippings_name', 'contexto_recortes_nome')
+
 )
 
 
 # COMMAND ----------
 
-# DBTITLE 1,Removendo colunas relacionadas a animais e transportes
-df_clean = df_clean.drop(
-    'animalVictims_id',
-    'animalVictims_name',
-    'animalVictims_occurrenceId',
-    'animalVictims_situation',
-    'animalVictims_type',
-    'transports_id',
-    'transports_interruptedTransport',
-    'transports_dateInterruption',
-    'transports_occurrenceId',
-    'transports_releaseDate',
-    'transports_transportDescription',
-    'transport_id',
-    'transport_name'
-    )
+df_clean.display()
 
 # COMMAND ----------
 
