@@ -8,88 +8,134 @@ sigla = table_name.upper()
 # COMMAND ----------
 
 # DBTITLE 1,Definindo schema
-from pyspark.sql.types import StructType, StructField, StringType, BooleanType, DateType, IntegerType
+from pyspark.sql.types import *
 
 schema = StructType([
-    StructField("address", StringType(), True),
-    StructField("agentPresence", BooleanType(), True),
-    StructField("date", DateType(), True),
-    StructField("documentNumber", StringType(), True),
-    StructField("id", StringType(), True),
-    StructField("latitude", StringType(), True),
-    StructField("longitude", StringType(), True),
-    StructField("policeAction", BooleanType(), True),
-    StructField("relatedRecord", StringType(), True),
-    StructField("city_id", StringType(), True),
-    StructField("city_name", StringType(), True),
-    StructField("contextInfo_massacre", BooleanType(), True),
-    StructField("contextInfo_policeUnit", StringType(), True),
-    StructField("locality_id", StringType(), True),
-    StructField("locality_name", StringType(), True),
-    StructField("neighborhood_id", StringType(), True),
-    StructField("neighborhood_name", StringType(), True),
-    StructField("region_enabled", BooleanType(), True),
-    StructField("region_id", StringType(), True),
-    StructField("region_region", StringType(), True),
-    StructField("region_state", StringType(), True),
-    StructField("state_id", StringType(), True),
-    StructField("state_name", StringType(), True),
-    StructField("subNeighborhood_id", StringType(), True),
-    StructField("subNeighborhood_name", StringType(), True),
-    StructField("victims_age", IntegerType(), True),
-    StructField("victims_deathDate", DateType(), True),
-    StructField("victims_id", StringType(), True),
-    StructField("victims_occurrenceId", StringType(), True),
-    StructField("victims_personType", StringType(), True),
-    StructField("victims_race", StringType(), True),
-    StructField("victims_situation", StringType(), True),
-    StructField("victims_type", StringType(), True),
-    StructField("victims_unit", StringType(), True),
-    StructField("contextInfo_mainReason_id", StringType(), True),
-    StructField("contextInfo_mainReason_name", StringType(), True),
-    StructField("victims_ageGroup_id", StringType(), True),
-    StructField("victims_ageGroup_name", StringType(), True),
-    StructField("victims_agentPosition_id", StringType(), True),
-    StructField("victims_agentPosition_name", StringType(), True),
-    StructField("victims_agentPosition_type", StringType(), True),
-    StructField("victims_agentStatus_id", StringType(), True),
-    StructField("victims_agentStatus_name", StringType(), True),
-    StructField("victims_agentStatus_type", StringType(), True),
-    StructField("victims_coorporation_id", StringType(), True),
-    StructField("victims_coorporation_name", StringType(), True),
-    StructField("victims_genre_id", StringType(), True),
-    StructField("victims_genre_name", StringType(), True),
-    StructField("victims_partie_id", StringType(), True),
-    StructField("victims_partie_name", StringType(), True),
-    StructField("victims_place_id", StringType(), True),
-    StructField("victims_place_name", StringType(), True),
-    StructField("victims_politicalPosition_id", StringType(), True),
-    StructField("victims_politicalPosition_name", StringType(), True),
-    StructField("victims_politicalPosition_type", StringType(), True),
-    StructField("victims_politicalStatus_id", StringType(), True),
-    StructField("victims_politicalStatus_name", StringType(), True),
-    StructField("victims_politicalStatus_type", StringType(), True),
-    StructField("victims_serviceStatus_id", StringType(), True),
-    StructField("victims_serviceStatus_name", StringType(), True),
-    StructField("victims_serviceStatus_type", StringType(), True),
-    StructField("contextInfo_complementaryReasons_id", StringType(), True),
-    StructField("contextInfo_complementaryReasons_name", StringType(), True),
-    StructField("victims_circumstances_id", StringType(), True),
-    StructField("victims_circumstances_name", StringType(), True),
-    StructField("victims_circumstances_type", StringType(), True),
-    StructField("victims_qualifications_id", StringType(), True),
-    StructField("victims_qualifications_name", StringType(), True),
-    StructField("victims_qualifications_type", StringType(), True),
-    StructField("contextInfo_clippings_id", StringType(), True),
-    StructField("contextInfo_clippings_name", StringType(), True)
+    StructField("msg", StringType(), True),
+    StructField("msgCode", StringType(), True),
+    StructField("code", IntegerType(), True),
+    StructField("pageMeta", StructType([
+        StructField("page", IntegerType(), True),
+        StructField("take", IntegerType(), True),
+        StructField("itemCount", IntegerType(), True),
+        StructField("pageCount", IntegerType(), True),
+        StructField("hasPreviousPage", BooleanType(), True),
+        StructField("hasNextPage", BooleanType(), True),
+    ]), True),
+    StructField("data", ArrayType(StructType([
+        StructField("id", StringType(), True),
+        StructField("documentNumber", IntegerType(), True),
+        StructField("address", StringType(), True),
+        StructField("state", StructType([
+            StructField("id", StringType(), True),
+            StructField("name", StringType(), True),
+        ]), True),
+        StructField("region", StructType([
+            StructField("id", StringType(), True),
+            StructField("region", StringType(), True),
+            StructField("state", StringType(), True),
+            StructField("enabled", BooleanType(), True),
+        ]), True),
+        StructField("city", StructType([
+            StructField("id", StringType(), True),
+            StructField("name", StringType(), True),
+        ]), True),
+        StructField("neighborhood", StructType([
+            StructField("id", StringType(), True),
+            StructField("name", StringType(), True),
+        ]), True),
+        StructField("subNeighborhood", StringType(), True),  # null allowed
+        StructField("locality", StringType(), True),  # null allowed
+        StructField("latitude", StringType(), True),
+        StructField("longitude", StringType(), True),
+        StructField("date", StringType(), True),  # can be TimestampType if converted
+        StructField("policeAction", BooleanType(), True),
+        StructField("agentPresence", BooleanType(), True),
+        StructField("relatedRecord", StringType(), True),
+        StructField("contextInfo", StructType([
+            StructField("mainReason", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+            ]), True),
+            StructField("complementaryReasons", ArrayType(StringType()), True),
+            StructField("clippings", ArrayType(StringType()), True),
+            StructField("massacre", BooleanType(), True),
+            StructField("policeUnit", StringType(), True),
+        ]), True),
+        StructField("transports", ArrayType(StringType()), True),
+        StructField("victims", ArrayType(StructType([
+            StructField("id", StringType(), True),
+            StructField("occurrenceId", StringType(), True),
+            StructField("type", StringType(), True),
+            StructField("situation", StringType(), True),
+            StructField("circumstances", ArrayType(StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+                StructField("type", StringType(), True),
+            ])), True),
+            StructField("deathDate", StringType(), True),  # can be TimestampType if converted
+            StructField("personType", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("ageGroup", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+            ]), True),
+            StructField("genre", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+            ]), True),
+            StructField("race", StringType(), True),
+            StructField("place", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+            ]), True),
+            StructField("serviceStatus", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+                StructField("type", StringType(), True),
+            ]), True),
+            StructField("qualifications", ArrayType(StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+                StructField("type", StringType(), True),
+            ])), True),
+            StructField("politicalPosition", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+                StructField("type", StringType(), True),
+            ]), True),
+            StructField("politicalStatus", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+                StructField("type", StringType(), True),
+            ]), True),
+            StructField("partie", StringType(), True),
+            StructField("coorporation", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+            ]), True),
+            StructField("agentPosition", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+                StructField("type", StringType(), True),
+            ]), True),
+            StructField("agentStatus", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+                StructField("type", StringType(), True),
+            ]), True),
+            StructField("unit", StringType(), True),
+        ])), True),
+        StructField("animalVictims", ArrayType(StringType()), True),
+    ])), True),
 ])
+
 
 # COMMAND ----------
 
 # DBTITLE 1,df_fogo_cruzado formato json
 df_raw = spark.read.format("json") \
     .option("multiline", "true") \
-    .schema(schema) \
     .load(f"/Volumes/raw/fogo-cruzado/s3-fogo-cruzado-cdc/{sigla}")
 
 # COMMAND ----------
