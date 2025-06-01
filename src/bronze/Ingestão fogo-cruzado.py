@@ -210,4 +210,4 @@ for column in result.columns:
 
 # COMMAND ----------
 
-result.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.rj')
+result.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
