@@ -213,13 +213,4 @@ for column in result.columns:
 
 # COMMAND ----------
 
-result.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC describe extended bronze.fogo_cruzado.rj
-
-# COMMAND ----------
-
-
+result.write.format('delta').mode('append').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
