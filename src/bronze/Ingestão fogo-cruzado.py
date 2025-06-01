@@ -143,6 +143,7 @@ schema = StructType([
 # DBTITLE 1,df_fogo_cruzado formato json
 df_raw = spark.read.format("json") \
     .option("multiline", "true") \
+    .schema(schema) \
     .load(f"/Volumes/raw/fogo-cruzado/s3-fogo-cruzado-cdc/{sigla}")
 
 # COMMAND ----------
@@ -209,4 +210,4 @@ for column in result.columns:
 
 # COMMAND ----------
 
-result.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
+result.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.rj')
