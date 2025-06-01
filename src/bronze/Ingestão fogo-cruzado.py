@@ -48,7 +48,10 @@ schema = StructType([
             StructField("id", StringType(), True),
             StructField("name", StringType(), True),
         ]), True),
-        StructField("locality", StringType(), True),  # null allowed
+        StructField("locality", StructType([
+            StructField("id", StringType(), True),
+            StructField("name", StringType(), True),
+        ]), True),
         StructField("latitude", StringType(), True),
         StructField("longitude", StringType(), True),
         StructField("date", TimestampType(), True),  # can be TimestampType if converted
@@ -211,3 +214,12 @@ for column in result.columns:
 # COMMAND ----------
 
 result.write.format('delta').mode('overwrite').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC describe extended bronze.fogo_cruzado.rj
+
+# COMMAND ----------
+
+
