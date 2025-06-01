@@ -22,7 +22,6 @@ df_clean = (df_fogo_cruzado_bronze
     .withColumnRenamed('longitude', 'longitude') \
     .withColumnRenamed('policeAction', 'acao_policial') \
     .withColumnRenamed('relatedRecord', 'registro_relacionado') \
-    .withColumnRenamed('subNeighborhood', 'sub_bairro') \
     .withColumnRenamed('city_id', 'municipio_id') \
     .withColumnRenamed('city_name', 'municipio_nome') \
     .withColumnRenamed('contextInfo_massacre', 'contexto_massacre') \
@@ -31,6 +30,8 @@ df_clean = (df_fogo_cruzado_bronze
     .withColumnRenamed('locality_name', 'localidade_nome') \
     .withColumnRenamed('neighborhood_id', 'bairro_id') \
     .withColumnRenamed('neighborhood_name', 'bairro_nome') \
+    .withColumnRenamed('subNeighborhood_id', 'vizinhanca_id') \
+    .withColumnRenamed('subNeighborhood_name', 'vizinhanca_nome') \
     .withColumnRenamed('region_enabled', 'regiao_ativa') \
     .withColumnRenamed('region_id', 'regiao_id') \
     .withColumnRenamed('region_region', 'regiao_regiao') \
@@ -69,6 +70,9 @@ df_clean = (df_fogo_cruzado_bronze
     .withColumnRenamed('victims_politicalStatus_id', 'vitima_status_politico_id') \
     .withColumnRenamed('victims_politicalStatus_name', 'vitima_status_politico_nome') \
     .withColumnRenamed('victims_politicalStatus_type', 'vitima_status_politico_tipo') \
+    .withColumnRenamed('victims_politicalStatus_type', 'vitima_status_politico_tipo') \
+    .withColumnRenamed('victims_partie_id', 'vitima_partido_id') \
+    .withColumnRenamed('victims_partie_id', 'vitima_partido_nome') \
     .withColumnRenamed('victims_serviceStatus_id', 'vitima_status_servico_id') \
     .withColumnRenamed('victims_serviceStatus_name', 'vitima_status_servico_nome') \
     .withColumnRenamed('victims_serviceStatus_type', 'vitima_status_servico_tipo') \
