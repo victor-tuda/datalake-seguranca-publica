@@ -24,7 +24,7 @@ schema = StructType([
     ]), True),
     StructField("data", ArrayType(StructType([
         StructField("id", StringType(), True),
-        StructField("documentNumber", IntegerType(), True),
+        StructField("documentNumber", StringType(), True),
         StructField("address", StringType(), True),
         StructField("state", StructType([
             StructField("id", StringType(), True),
@@ -44,11 +44,14 @@ schema = StructType([
             StructField("id", StringType(), True),
             StructField("name", StringType(), True),
         ]), True),
-        StructField("subNeighborhood", StringType(), True),  # null allowed
+        StructField("subNeighborhood", StructType([
+            StructField("id", StringType(), True),
+            StructField("name", StringType(), True),
+        ]), True),
         StructField("locality", StringType(), True),  # null allowed
         StructField("latitude", StringType(), True),
         StructField("longitude", StringType(), True),
-        StructField("date", StringType(), True),  # can be TimestampType if converted
+        StructField("date", TimestampType(), True),  # can be TimestampType if converted
         StructField("policeAction", BooleanType(), True),
         StructField("agentPresence", BooleanType(), True),
         StructField("relatedRecord", StringType(), True),
@@ -73,7 +76,7 @@ schema = StructType([
                 StructField("name", StringType(), True),
                 StructField("type", StringType(), True),
             ])), True),
-            StructField("deathDate", StringType(), True),  # can be TimestampType if converted
+            StructField("deathDate", TimestampType(), True),  # can be TimestampType if converted
             StructField("personType", StringType(), True),
             StructField("age", IntegerType(), True),
             StructField("ageGroup", StructType([
@@ -109,7 +112,11 @@ schema = StructType([
                 StructField("name", StringType(), True),
                 StructField("type", StringType(), True),
             ]), True),
-            StructField("partie", StringType(), True),
+            StructField("partie", StructType([
+                StructField("id", StringType(), True),
+                StructField("name", StringType(), True),
+                StructField("type", StringType(), True),
+            ]), True),
             StructField("coorporation", StructType([
                 StructField("id", StringType(), True),
                 StructField("name", StringType(), True),
