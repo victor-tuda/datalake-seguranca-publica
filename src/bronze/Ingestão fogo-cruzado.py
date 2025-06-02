@@ -243,4 +243,4 @@ delta_table = DeltaTable.forName(spark, f"bronze.fogo_cruzado.{sigla}")
 
 # COMMAND ----------
 
-dbutils.fs.mv('s3://victor-datalake-seguranca/fogo-cruzado/cdc/{sigla}/', 's3://victor-datalake-seguranca/fogo-cruzado/processed/{sigla}/', recurse=True)
+dbutils.fs.mv(f's3://victor-datalake-seguranca/fogo-cruzado/cdc/{sigla}/', f's3://victor-datalake-seguranca/fogo-cruzado/processed/{sigla}/', recurse=True)
