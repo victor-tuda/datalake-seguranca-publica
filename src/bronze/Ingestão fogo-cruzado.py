@@ -213,4 +213,34 @@ for column in result.columns:
 
 # COMMAND ----------
 
-result.write.format('delta').mode('append').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
+from delta.tables import DeltaTable
+
+# Load the existing Delta table
+delta_table = DeltaTable.forName(spark, "bronze.fogo_cruzado.{sigla}")
+
+# Perform the merge (UPSERT)
+(
+    delta_table.alias("target")
+    .merge(
+        result.alias("source"),
+        """
+        target.victims_id = source.victims_id AND
+        target.contextInfo_mainReason_id = source.contextInfo_mainReason_id AND
+        target.victims_circumstances_id = source.victims_circumstances_id AND
+        target.victims_qualifications_id = source.victims_qualifications_id AND
+        target.contextInfo_clippings = source.contextInfo_clippings
+        """
+    )
+    .whenMatchedUpdateAll()
+    .whenNotMatchedInsertAll()
+    .execute()
+)
+
+
+# COMMAND ----------
+
+#result.write.format('delta').mode('append').saveAsTable(f'bronze.fogo_cruzado.{table_name}')
+
+# COMMAND ----------
+
+dbutils.fs.mv('s3://victor-datalake-seguranca/fogo-cruzado/cdc/{sigla}/', 's3://victor-datalake-seguranca/fogo-cruzado/processed/{sigla}/', recurse=True)
