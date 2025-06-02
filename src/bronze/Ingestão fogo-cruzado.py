@@ -216,7 +216,7 @@ for column in result.columns:
 from delta.tables import DeltaTable
 
 # Load the existing Delta table
-delta_table = DeltaTable.forName(spark, "bronze.fogo_cruzado.{sigla}")
+delta_table = DeltaTable.forName(spark, f"bronze.fogo_cruzado.{sigla}")
 
 # Perform the merge (UPSERT)
 (
